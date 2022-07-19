@@ -33,6 +33,7 @@ const UserPage: FC = () => {
 			}
 
 			try {
+				setIsLoading(true);
 				const { data }: IUserResponse = await axios.get(
 					`${BASE_URL}/users/${login}`,
 				);
