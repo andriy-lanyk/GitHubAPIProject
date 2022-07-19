@@ -13,6 +13,11 @@ code {
     monospace;
 }
 
+h1, h2, h3 {
+  margin: 0;
+  padding: 0;
+}
+
 ul {
   margin: 0px;
   padding: 0px;
@@ -51,4 +56,24 @@ form {
 .notFound {
   text-align: center;
   font-weight: 700;
+}
+
+.goBack {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  cursor: pointer;
+
+    &:hover {
+        border-bottom: 1px solid #212121;
+        transition: all 300ms ease-in-out;
+      }
+}
+
+.error {
+  font-weight: 700;
+  text-align: center;
 }

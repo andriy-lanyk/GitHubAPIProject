@@ -1,13 +1,15 @@
 .repositoryCard {
+    margin-bottom: 15px;
     font-size: 14px;
     font-weight: 700;
+    border-radius: 4px;
     transform: scale(1);
     background-color: rgb(0, 77, 192);
     box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
     transition: background-color 300ms ease-in-out, transform 300ms ease-in-out;
 
     &:hover {
-        transform: scale(1.05);
+        transform: scale(1.02);
         background-color: rgb(89, 154, 253);
         transition: background-color 300ms ease-in-out, transform 300ms ease-in-out;
     }
@@ -15,7 +17,13 @@
     &__link {
         display: flex;
         justify-content: space-between;
+        align-items: center;
         padding: 10px;
+        color: #212121;
+
+        & h3 {
+            font-style: italic;
+        }
     }
 
     &__container {

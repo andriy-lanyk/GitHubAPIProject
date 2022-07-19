@@ -1,1 +1,9 @@
 export const BASE_URL = 'https://api.github.com'
+export const NOT_FOUND_USERS = "We don't have such user"
+export const NOT_HAVE = "We don't have such user..."
+export const GO_BACK = 'Go back'
+export const ERROR_MESSAGE = 'Sorry, something went wrong. Try again later...'
+export const NOT_AUTHORIZED = 'You are not authorized or you have bad credentials'
+export const LIMIT_EXCEEDED = 'Server request limit exceeded. Try again in an hour...'
+export const NO_REPO = 'No repositories'
+export const NO_BIOGRAPHY = "This user doesn't have biography"

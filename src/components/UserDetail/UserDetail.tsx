@@ -1,105 +1,151 @@
-import {FC, useState, useEffect} from "react";
-import axios from "axios";
-// import moment from "moment";
+import { FC, useState, useEffect } from 'react';
+import axios from 'axios';
+import moment from 'moment';
 
-import Container from '../Container';
-import Title from "../Title";
-import Input from "../Input";
-import RepositoryCard from "../RepositoryCard";
+import Input from '../Input';
+import RepositoryCard from '../RepositoryCard';
+import Loader from '../Loader';
 
-import { IRepository } from "../../interfaces/repository";
-import { IRepositoryResponse } from "../../interfaces/APIresponse";
-import { IUserDetail } from "../../interfaces/user";
+import { IRepository } from '../../interfaces/repository';
+import { IRepositoryResponse } from '../../interfaces/APIresponse';
+import { IUserDetail } from '../../interfaces/user';
 
-import { BASE_URL } from "../../constants/constants";
+import {
+	BASE_URL,
+	NO_REPO,
+	NO_BIOGRAPHY,
+	ERROR_MESSAGE,
+} from '../../constants/constants';
 import styles from './UserDetail.module.scss';
 
 interface IAboutUser {
-  userData: IUserDetail;
-  userName: string | undefined;
+	userData: IUserDetail;
+	userName: string | undefined;
 }
 
 const UserDetail: FC<IAboutUser> = ({ userData, userName }) => {
-  const [inputValue, setInputValue] = useState<string>("");
-  const [userRepos, setUserRepos] = useState<IRepository[]>();
-  const handleInputChange = (e: any) => {
-    setInputValue(e.currentTarget.value);
-  };
+	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const [error, setError] = useState<boolean>(false);
+	const [inputValue, setInputValue] = useState<string>('');
+	const [userRepos, setUserRepos] = useState<IRepository[]>();
+	const handleInputChange = (e: any) => {
+		setInputValue(e.currentTarget.value);
+	};
 
-  useEffect(() => {
-    const getUserRepo = async () => {
-      try {
-        const { data }: IRepositoryResponse = await axios.get(
-          `${BASE_URL}/users/${userName}/repos`
-        );
-        setUserRepos(data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getUserRepo();
-  }, [userName]);
+	useEffect(() => {
+		if (error) {
+			setError(false);
+		}
+		const getUserRepo = async () => {
+			try {
+				setIsLoading(true);
+				const { data }: IRepositoryResponse = await axios.get(
+					`${BASE_URL}/users/${userName}/repos`,
+				);
+				if (data) {
+					setUserRepos(data);
+				}
+				setIsLoading(false);
+			} catch (error) {
+				setError(true);
+				setIsLoading(false);
+			}
+		};
+		getUserRepo();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [userName]);
 
-  const {
-    avatar_url,
-    email,
-    login,
-    created_at,
-    followers,
-    following,
-    location,
-    bio,
-  } = userData;
-  return (
-    <Container>
-      <div className={ styles.detailInfo}>
-        <img className={ styles.detailInfo__img}  src={ avatar_url } width="350" height="350" alt={login } />
-      </div>
-      <div className={ styles.detailInfo__text }>
-              <p ><span className={ styles.detailInfo__subTitle }>UserName:</span> {login}</p>
-          <p ><span className={ styles.detailInfo__subTitle }>Email:</span>{email ? email : " No Email"}</p>
-          <p >
-            <span className={ styles.detailInfo__subTitle }>Loaction:</span> {location ? location : " No Location"}
-          </p>
-          <p >
-            <span className={ styles.detailInfo__subTitle }>Join At:</span> {created_at}
-          </p>
-          <p >{followers} - <span className={ styles.detailInfo__subTitle }>Followers</span></p>
-          <p ><span className={ styles.detailInfo__subTitle }>Following</span> - {following}</p>
-          </div>
-          <div>
-              <h3>Bio:</h3>
-        <p>{bio ? bio : "This user doesn't have bio"}</p>
-          </div>
-        
-      <Input
-        inputValue={inputValue}
-        onChange={handleInputChange}
-        placeholderText={"Search for User's repositories"}
-      />
-      <div >
-        {userRepos ? (
-          userRepos.map((repo: IRepository) => {
-            const { id, name, html_url, stargazers_count, forks_count } = repo;
-            if (name.includes(inputValue)) {
-              return (
-                <RepositoryCard
-                  key={id}
-                  repoUrl={html_url}
-                  repoName={name}
-                  starsCount={stargazers_count}
-                  forksCount={forks_count}
-                />
-              );
-              }
-              return '';
-          })
-        ) : (
-          <p>No repositories</p>
-        )}
-      </div>
-    </Container>
-  );
+	const {
+		avatar_url,
+		email,
+		login,
+		created_at,
+		followers,
+		following,
+		location,
+		bio,
+	} = userData;
+
+	if (isLoading) {
+		return <Loader />;
+	}
+
+	if (error) {
+		<p className='error'>{ERROR_MESSAGE}</p>;
+	}
+
+	return (
+		<>
+			<div className={styles.detailInfo}>
+				<img
+					className={styles.detailInfo__img}
+					src={avatar_url}
+					width='350'
+					height='350'
+					alt={login}
+				/>
+				<div className={styles.detailInfo__text}>
+					<p>
+						<span className={styles.detailInfo__subTitle}>UserName:</span>{' '}
+						{login}
+					</p>
+					<p>
+						<span className={styles.detailInfo__subTitle}>Email:</span>
+						{email ? email : ' No Email'}
+					</p>
+					<p>
+						<span className={styles.detailInfo__subTitle}>Loaction:</span>{' '}
+						{location ? location : ' No Location'}
+					</p>
+					<p>
+						<span className={styles.detailInfo__subTitle}>Join Date:</span>{' '}
+						{moment(created_at).format('DD-MM-YYYY')}
+					</p>
+					<p>
+						{followers} -{' '}
+						<span className={styles.detailInfo__subTitle}>Followers</span>
+					</p>
+					<p>
+						<span className={styles.detailInfo__subTitle}>Following</span> -{' '}
+						{following}
+					</p>
+				</div>
+			</div>
+			<div className={styles.detailInfo__biography}>
+				<h2>Biography:</h2>
+				<p>{bio ? bio : NO_BIOGRAPHY}</p>
+			</div>
+			<form>
+				<Input
+					inputValue={inputValue}
+					onChange={handleInputChange}
+					placeholderText={"Search for User's repositories"}
+				/>
+			</form>
+
+			<div>
+				{userRepos ? (
+					userRepos.map((repo: IRepository) => {
+						const { id, name, html_url, stargazers_count, forks_count } = repo;
+						if (name.includes(inputValue)) {
+							return (
+								<RepositoryCard
+									key={id}
+									repoUrl={html_url}
+									repoName={name}
+									starsCount={stargazers_count}
+									forksCount={forks_count}
+								/>
+							);
+						}
+						return '';
+					})
+				) : (
+					<p>{NO_REPO}</p>
+				)}
+			</div>
+		</>
+	);
 };
 
 export default UserDetail;

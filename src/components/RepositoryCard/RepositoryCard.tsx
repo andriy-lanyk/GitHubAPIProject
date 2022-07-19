@@ -23,7 +23,7 @@ const RepositoryCard: FC<IRepositoryCard> = ({
       rel="noreferrer"
       className={styles.repositoryCard__link}
     >
-        <span>{repoName}</span>
+        <h3>{repoName}</h3>
         <div className={styles.repositoryCard__container}>
           <p>{forksCount} Forks</p>
           <p>{starsCount} Stars</p>
