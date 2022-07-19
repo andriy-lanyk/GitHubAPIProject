@@ -1,0 +1,11 @@
+.userCard {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    padding: 5px;
+    transition: 0.2s linear;
+
+    &:hover {
+        background-color: rgba(224, 224, 224, 0.589);
+    }
+}
