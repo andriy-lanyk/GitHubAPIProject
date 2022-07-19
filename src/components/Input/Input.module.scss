@@ -1,0 +1,19 @@
+.searchInput {
+    width: 300px;
+    padding: 10px 20px;
+    margin-bottom: 20px;
+    background-color: rgb(243, 157, 157);
+    color: #212121;
+    outline: none;
+    border: 2px solid blue;
+
+    &:focus-visible {
+        border: 2px solid brown;
+        transition: background-color 300ms ease-in-out;
+    }
+
+    &::placeholder {
+        color: #6b6b6b;
+        transition: background-color 300ms ease-in-out;
+    }
+}

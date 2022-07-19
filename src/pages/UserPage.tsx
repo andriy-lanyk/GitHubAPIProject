@@ -36,7 +36,7 @@ const UserPage: FC = () => {
     return <Loader />;
   }
 
-  return <>{user && <UserDetail userData={user} userName={login} />}</>;
+  return user ? <UserDetail userData={user} userName={login} /> : <p>We don't have such user</p>;
 };
 
 export default UserPage;

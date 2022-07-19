@@ -27,9 +27,6 @@ const UserCard: FC<IUserCard> = ({
       if (userRepoUrl) {
         try {
           setIsLoading(true)
-          // const { data } = await axios.get(userRepoUrl, {
-          //   cancelToken: cancelToken,
-          // });
           const { data } = await axiosInstance({
           method:'GET',
           url: userRepoUrl,
@@ -52,8 +49,8 @@ const UserCard: FC<IUserCard> = ({
   }, [userRepoUrl]);
   return (
       <div className={ styles.userCard }>
-          <img src={ imgUrl } width="60" height="60" alt={userName } />
-          <p>{`User-name: ${userName}`}</p>
+          <img className={ styles.userCard__image } src={ imgUrl } alt={userName } />
+          <p className={ styles.userCard__title }>{userName}</p>
           {isLoading ? (
             <Loader />
           ) : (

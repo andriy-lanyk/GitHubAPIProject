@@ -1,8 +1,10 @@
-import {FC} from "react";
+import { FC } from "react";
+
+import styles from './Title.module.scss';
 
 const Title: FC = () => {
   return (
-      <h1>GitHub Searcher</h1>
+      <h1 className={styles.title}>GitHub Searcher</h1>
   );
 };
 

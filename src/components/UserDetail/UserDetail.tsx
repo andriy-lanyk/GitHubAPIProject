@@ -12,6 +12,7 @@ import { IRepositoryResponse } from "../../interfaces/APIresponse";
 import { IUserDetail } from "../../interfaces/user";
 
 import { BASE_URL } from "../../constants/constants";
+import styles from './UserDetail.module.scss';
 
 interface IAboutUser {
   userData: IUserDetail;
@@ -51,23 +52,24 @@ const UserDetail: FC<IAboutUser> = ({ userData, userName }) => {
   } = userData;
   return (
     <Container>
-      <Title />
-          <img src={ avatar_url } width="350" height="350" alt={login } />
-          <div>
-              <p className="bio-text">UserName: {login}</p>
-          <p className="bio-text">Email:{email ? email : " No Email"}</p>
-          <p className="bio-text">
-            Loaction: {location ? location : " No Location"}
+      <div className={ styles.detailInfo}>
+        <img className={ styles.detailInfo__img}  src={ avatar_url } width="350" height="350" alt={login } />
+      </div>
+      <div className={ styles.detailInfo__text }>
+              <p ><span className={ styles.detailInfo__subTitle }>UserName:</span> {login}</p>
+          <p ><span className={ styles.detailInfo__subTitle }>Email:</span>{email ? email : " No Email"}</p>
+          <p >
+            <span className={ styles.detailInfo__subTitle }>Loaction:</span> {location ? location : " No Location"}
           </p>
-          <p className="bio-text">
-            Join At: {created_at}
+          <p >
+            <span className={ styles.detailInfo__subTitle }>Join At:</span> {created_at}
           </p>
-          <p className="bio-text">{followers} - Followers</p>
-          <p className="bio-text">Following - {following}</p>
+          <p >{followers} - <span className={ styles.detailInfo__subTitle }>Followers</span></p>
+          <p ><span className={ styles.detailInfo__subTitle }>Following</span> - {following}</p>
           </div>
           <div>
               <h3>Bio:</h3>
-        <p>{bio ? bio : "This user does not have bio"}</p>
+        <p>{bio ? bio : "This user doesn't have bio"}</p>
           </div>
         
       <Input
@@ -75,7 +77,7 @@ const UserDetail: FC<IAboutUser> = ({ userData, userName }) => {
         onChange={handleInputChange}
         placeholderText={"Search for User's repositories"}
       />
-      <div className="mt-3 pb-2">
+      <div >
         {userRepos ? (
           userRepos.map((repo: IRepository) => {
             const { id, name, html_url, stargazers_count, forks_count } = repo;
@@ -93,7 +95,7 @@ const UserDetail: FC<IAboutUser> = ({ userData, userName }) => {
               return '';
           })
         ) : (
-          <p>No data</p>
+          <p>No repositories</p>
         )}
       </div>
     </Container>

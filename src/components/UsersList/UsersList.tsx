@@ -14,6 +14,10 @@ interface IUsersList {
     inputValue: string;
 }
 
+interface IUserResp {
+  data: IUser[]
+}
+
 const UsersList: FC<IUsersList> = ( { inputValue } ) => {
     const [users, setUsers] = useState<IUser[] | null>(null);
     const [ isLoading, setIsLoading ] = useState<boolean>( false );
@@ -26,13 +30,38 @@ const UsersList: FC<IUsersList> = ( { inputValue } ) => {
       try {
         setIsLoading(true);
         const { data }: IUsersResponse = await axiosInstance({
+          
           method:'GET',
           url: `/search/users?q=${debouncedValue}`,
         })
-        console.log('data: ', data);
         
         if (data) {
+          
           setUsers(data.items);
+          
+          setIsLoading(false);
+        }
+      } catch (err: any) {
+        if (err.response.status === 401) {
+          // window.alert("You are not authorized");
+          setIsLoading(false);
+        }
+        if (err.response.status === 403) {
+          // window.alert("The number of requests has run out, reload the page");
+          setIsLoading(false);
+        }
+      }
+    } else {
+      try {
+        setIsLoading(true);
+        const { data }: IUserResp = await axiosInstance({
+          method:'GET',
+          url: `/users`,
+        } )
+        console.log('data in else: ', data);
+        
+        if (data) {
+          setUsers(data);
           setIsLoading(false);
         }
       } catch (err: any) {
@@ -63,7 +92,7 @@ const UsersList: FC<IUsersList> = ( { inputValue } ) => {
                 />
             </Link>
         );
-    } ) : <p>We don't have such users...</p>}</div>
+    } ) : <p className="notFound">We don't have such users...</p>}</div>
 }
 
 export default UsersList;

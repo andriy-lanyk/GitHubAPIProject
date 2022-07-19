@@ -1,11 +1,14 @@
 import { FC } from 'react';
 import { Routes, Route } from 'react-router-dom';
+import Container from './components/Container';
+import Title from './components/Title';
 import HomePage from "./pages/HomePage";
 import UserPage from "./pages/UserPage";
 
 const App: FC = () => {
-	return (
-			<Routes>
+	return (<Container>
+		<Title />
+					<Routes>
 				<Route
 					path='/'
 					element={<HomePage />}
@@ -16,6 +19,7 @@ const App: FC = () => {
 					element={<HomePage />}
 				/>
 			</Routes>
+	</Container>
 	);
 }
 

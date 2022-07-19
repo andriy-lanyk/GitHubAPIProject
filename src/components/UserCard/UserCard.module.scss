@@ -1,11 +1,42 @@
 .userCard {
-    margin-top: 10px;
-    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 15px 0;
+    padding: 10px;
+    color: #212121;
+    font-size: 18px;
+    font-weight: 700;
+    background-color: rgb(0, 77, 192);
+    border-radius: 8px;
+    transform: scale(1);
     cursor: pointer;
-    padding: 5px;
-    transition: 0.2s linear;
+    transition: background-color 300ms ease-in-out, transform 300ms ease-in-out;
+    box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
 
     &:hover {
-        background-color: rgba(224, 224, 224, 0.589);
+        background-color: rgb(89, 154, 253);
+        transform: scale(1.02);
+        transition: background-color 300ms ease-in-out,
+            transform 300ms ease-in-out;
+    }
+
+    &__image {
+        width: 70px;
+        height: 70px;
+        display: block;
+        border-radius: 10px;
+        box-shadow: rgba(3, 102, 214, 0.3) 0px 0px 0px 3px;
+    }
+
+    &__title {
+        font-size: 22px;
+        color: rgb(0, 204, 44);
+        transition: color 300ms ease-in-out;
+
+        .userCard:hover & {
+            color: darkblue;
+            transition: color 300ms ease-in-out;
+        }
     }
 }

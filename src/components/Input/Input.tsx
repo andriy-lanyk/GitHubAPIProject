@@ -1,5 +1,7 @@
 import {FC} from "react";
 
+import styles from './Input.module.scss';
+
 interface InputProps {
   inputValue: string;
   onChange: (e: any) => void;
@@ -13,7 +15,8 @@ const Input: FC<InputProps> = ({
 }) => {
   return (
       <label>
-        <input
+      <input
+        className={styles.searchInput}
           value={inputValue}
           onChange={(e: any) => onChange(e)}
           placeholder={placeholderText}

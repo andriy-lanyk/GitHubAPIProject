@@ -1,5 +1,7 @@
 import {FC} from "react";
 
+import styles from './RepositoryCard.module.scss';
+
 interface IRepositoryCard {
   repoUrl: string;
   repoName: string;
@@ -14,17 +16,20 @@ const RepositoryCard: FC<IRepositoryCard> = ({
   starsCount,
 }) => {
   return (
-    <a
+    <div className={styles.repositoryCard}>
+      <a
       href={repoUrl}
       target="_blank"
       rel="noreferrer"
+      className={styles.repositoryCard__link}
     >
         <span>{repoName}</span>
-        <div>
+        <div className={styles.repositoryCard__container}>
           <p>{forksCount} Forks</p>
           <p>{starsCount} Stars</p>
         </div>
     </a>
+    </div>
   );
 };
 
