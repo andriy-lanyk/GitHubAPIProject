@@ -46,7 +46,6 @@ const UsersList: FC<IUsersList> = ({ inputValue }) => {
 					method: 'GET',
 					url: `/search/users?q=${debouncedValue}`,
 				});
-				console.log('data in UserList: ', data);
 
 				if (data) {
 					setUsers(data.items);
@@ -74,7 +73,6 @@ const UsersList: FC<IUsersList> = ({ inputValue }) => {
 					method: 'GET',
 					url: '/users',
 				});
-				console.log('data in UserList: ', data);
 
 				if (data) {
 					setUsers(data);

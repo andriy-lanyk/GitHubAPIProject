@@ -38,7 +38,6 @@ const UserPage: FC = () => {
 					method: 'GET',
 					url: `/users/${login}`,
 				});
-				console.log('data in UserPage: ', data);
 				setUser(data);
 				setIsLoading(false);
 			} catch (error: any) {

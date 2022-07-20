@@ -45,7 +45,6 @@ const UserDetail: FC<IAboutUser> = ({ userData, userName }) => {
 					method: 'GET',
 					url: `/users/${userName}/repos`,
 				});
-				console.log('data in UserDetail: ', data);
 				if (data) {
 					setUserRepos(data);
 				}
