@@ -1,21 +1,18 @@
-import { FC, useState, useEffect } from 'react';
+import { FC, useState, useContext } from 'react';
+
+import { SearchContext } from '../context/searchContext';
+import { SearchContextType } from '../interfaces/contextType';
 
 import Input from '../components/Input';
 import UsersList from '../components/UsersList';
 
 const Home: FC = () => {
-	const [searchValue, setSearchValue] = useState<string>('');
+	const { value } = useContext(SearchContext) as SearchContextType;
+	const [searchValue, setSearchValue] = useState<string>(value);
 
 	const handleInputChange = (e: React.FormEvent<HTMLInputElement>) => {
 		setSearchValue(e.currentTarget.value);
 	};
-
-	useEffect(() => {
-		const storage = localStorage.getItem('filterGitHubUsers');
-		if (storage && typeof storage === 'string') {
-			setSearchValue(JSON.parse(storage));
-		}
-	}, []);
 
 	return (
 		<>

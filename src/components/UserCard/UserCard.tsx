@@ -1,6 +1,7 @@
-import { FC, useState, useEffect } from 'react';
+import { FC } from 'react';
 
-import axiosInstance from '../../services/axiosInstance';
+// import octokitFetch from '../../services/octokitFetch';
+import useNumberOfRepos from '../../hooks/getNumberOfRepos';
 
 import styles from './UserCard.module.scss';
 
@@ -11,29 +12,26 @@ interface IUserCard {
 }
 
 const UserCard: FC<IUserCard> = ({ imgUrl, userName, userRepoUrl }) => {
-	const [numberOfRepo, setNumberOfRepo] = useState<number>();
-	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const { numberOfRepo, isLoading } = useNumberOfRepos(userRepoUrl);
+	// const [numberOfRepo, setNumberOfRepo] = useState<number>();
+	// const [isLoading, setIsLoading] = useState<boolean>(false);
 
-	useEffect(() => {
-		const getNumberOfUserRepos = async () => {
-			if (userRepoUrl) {
-				try {
-					setIsLoading(true);
-					const { data } = await axiosInstance({
-						method: 'GET',
-						url: userRepoUrl,
-					});
-					setNumberOfRepo(data.length);
-					setIsLoading(false);
-				} catch (error: any) {
-					console.log('error in userCard: ', error);
-					setIsLoading(false);
-				}
-			}
-		};
-		getNumberOfUserRepos();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [userRepoUrl]);
+	// useEffect(() => {
+	// 	const getNumberOfUserRepos = async () => {
+	// 		if (userRepoUrl) {
+	// 			try {
+	// 				setIsLoading(true);
+	// 				const { data } = await octokitFetch(userRepoUrl);
+	// 				setNumberOfRepo(data.length);
+	// 				setIsLoading(false);
+	// 			} catch (error: any) {
+	// 				setIsLoading(false);
+	// 			}
+	// 		}
+	// 	};
+	// 	getNumberOfUserRepos();
+	// 	// eslint-disable-next-line react-hooks/exhaustive-deps
+	// }, [userRepoUrl]);
 
 	return (
 		<div className={styles.userCard}>

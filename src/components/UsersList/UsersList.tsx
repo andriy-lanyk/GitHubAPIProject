@@ -1,10 +1,11 @@
-import { FC, useState, useEffect, useCallback } from 'react';
+import { FC, useState, useEffect, useCallback, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import UserCard from '../UserCard';
 import Loader from '../Loader';
 
+// import octokitFetch from '../../services/octokitFetch';
 import axiosInstance from '../../services/axiosInstance';
 import useDebounce from '../../hooks/customDebounce';
 import {
@@ -13,16 +14,13 @@ import {
 	ERROR_MESSAGE,
 	NOT_HAVE,
 } from '../../constants/constants';
+import { SearchContext } from '../../context/searchContext';
 
-import { IUsersResponse } from '../../interfaces/APIresponse';
 import { IUser } from '../../interfaces/user';
+import { SearchContextType } from '../../interfaces/contextType';
 
 interface IUsersList {
 	inputValue: string;
-}
-
-interface IUserResp {
-	data: IUser[];
 }
 
 const UsersList: FC<IUsersList> = ({ inputValue }) => {
@@ -30,6 +28,7 @@ const UsersList: FC<IUsersList> = ({ inputValue }) => {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [error, setError] = useState<boolean>(false);
 	const debouncedValue = useDebounce(inputValue, 500);
+	const { changeValue } = useContext(SearchContext) as SearchContextType;
 
 	const getUsers = useCallback(async () => {
 		if (error) {
@@ -39,10 +38,15 @@ const UsersList: FC<IUsersList> = ({ inputValue }) => {
 		if (debouncedValue) {
 			try {
 				setIsLoading(true);
-				const { data }: IUsersResponse = await axiosInstance({
+				// const { data } = await octokitFetch(
+				// 	`/search/users?q=${debouncedValue}`,
+				// );
+
+				const { data } = await axiosInstance({
 					method: 'GET',
 					url: `/search/users?q=${debouncedValue}`,
 				});
+				console.log('data in UserList: ', data);
 
 				if (data) {
 					setUsers(data.items);
@@ -51,13 +55,12 @@ const UsersList: FC<IUsersList> = ({ inputValue }) => {
 			} catch (error: any) {
 				setError(true);
 				setIsLoading(false);
-				console.log('error.response.status: ', error);
-				if (error.response.status === 401) {
+				if (error.status === 401) {
 					toast.warn(NOT_AUTHORIZED, {
 						theme: 'colored',
 					});
 				}
-				if (error.response.status === 403) {
+				if (error.status === 403) {
 					toast.warn(LIMIT_EXCEEDED, {
 						theme: 'colored',
 					});
@@ -66,10 +69,12 @@ const UsersList: FC<IUsersList> = ({ inputValue }) => {
 		} else {
 			try {
 				setIsLoading(true);
-				const { data }: IUserResp = await axiosInstance({
+				// const { data } = await octokitFetch('/users');
+				const { data } = await axiosInstance({
 					method: 'GET',
-					url: `/users`,
+					url: '/users',
 				});
+				console.log('data in UserList: ', data);
 
 				if (data) {
 					setUsers(data);
@@ -78,13 +83,12 @@ const UsersList: FC<IUsersList> = ({ inputValue }) => {
 			} catch (error: any) {
 				setError(true);
 				setIsLoading(false);
-				console.log('error.response.status: ', error);
-				if (error.response.status === 401) {
+				if (error.status === 401) {
 					toast.warn(NOT_AUTHORIZED, {
 						theme: 'colored',
 					});
 				}
-				if (error.response.status === 403) {
+				if (error.status === 403) {
 					toast.warn(LIMIT_EXCEEDED, {
 						theme: 'colored',
 					});
@@ -96,8 +100,8 @@ const UsersList: FC<IUsersList> = ({ inputValue }) => {
 
 	useEffect(() => {
 		getUsers();
-		localStorage.setItem('filterGitHubUsers', JSON.stringify(debouncedValue));
-	}, [debouncedValue, getUsers]);
+		changeValue(debouncedValue);
+	}, [debouncedValue, getUsers, changeValue]);
 
 	if (error) {
 		return <p className='error'>{ERROR_MESSAGE}</p>;

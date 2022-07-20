@@ -1,17 +1,16 @@
 import { FC, useState, useEffect } from 'react';
-import axios from 'axios';
 import moment from 'moment';
 
 import Input from '../Input';
 import RepositoryCard from '../RepositoryCard';
-import Loader from '../Loader';
 
 import { IRepository } from '../../interfaces/repository';
-import { IRepositoryResponse } from '../../interfaces/APIresponse';
 import { IUserDetail } from '../../interfaces/user';
 
+// import octokitFetch from '../../services/octokitFetch';
+import axiosInstance from '../../services/axiosInstance';
+
 import {
-	BASE_URL,
 	NO_REPO,
 	NO_BIOGRAPHY,
 	ERROR_MESSAGE,
@@ -39,9 +38,14 @@ const UserDetail: FC<IAboutUser> = ({ userData, userName }) => {
 		const getUserRepo = async () => {
 			try {
 				setIsLoading(true);
-				const { data }: IRepositoryResponse = await axios.get(
-					`${BASE_URL}/users/${userName}/repos`,
-				);
+				// const { data } = await octokitFetch(`/users/${userName}/repos`, {
+				// 	username: `${userName}`,
+				// });
+				const { data } = await axiosInstance({
+					method: 'GET',
+					url: `/users/${userName}/repos`,
+				});
+				console.log('data in UserDetail: ', data);
 				if (data) {
 					setUserRepos(data);
 				}
@@ -65,10 +69,6 @@ const UserDetail: FC<IAboutUser> = ({ userData, userName }) => {
 		location,
 		bio,
 	} = userData;
-
-	if (isLoading) {
-		return <Loader />;
-	}
 
 	if (error) {
 		<p className='error'>{ERROR_MESSAGE}</p>;
@@ -124,7 +124,9 @@ const UserDetail: FC<IAboutUser> = ({ userData, userName }) => {
 			</form>
 
 			<div>
-				{userRepos ? (
+				{isLoading ? (
+					<div className={styles.detailInfo__load}></div>
+				) : userRepos ? (
 					userRepos.map((repo: IRepository) => {
 						const { id, name, html_url, stargazers_count, forks_count } = repo;
 						if (name.includes(inputValue)) {

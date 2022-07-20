@@ -1,23 +1,20 @@
 import { FC, useState, useEffect } from 'react';
-import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import Loader from '../components/Loader';
 import UserDetail from '../components/UserDetail';
 
+// import octokitFetch from '../services/octokitFetch';
+import axiosInstance from '../services/axiosInstance';
+
 import {
-	BASE_URL,
 	GO_BACK,
 	ERROR_MESSAGE,
 	NOT_AUTHORIZED,
 	LIMIT_EXCEEDED,
 } from '../constants/constants';
 import { IUserDetail } from '../interfaces/user';
-
-interface IUserResponse {
-	data: IUserDetail;
-}
 
 const UserPage: FC = () => {
 	const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -34,21 +31,26 @@ const UserPage: FC = () => {
 
 			try {
 				setIsLoading(true);
-				const { data }: IUserResponse = await axios.get(
-					`${BASE_URL}/users/${login}`,
-				);
+				// const { data } = await octokitFetch(`/users/${login}`, {
+				// 	username: `${login}`,
+				// });
+				const { data } = await axiosInstance({
+					method: 'GET',
+					url: `/users/${login}`,
+				});
+				console.log('data in UserPage: ', data);
 				setUser(data);
 				setIsLoading(false);
 			} catch (error: any) {
 				setUser(null);
 				setError(true);
 				setIsLoading(false);
-				if (error.response.status === 401) {
+				if (error.status === 401) {
 					toast.warn(NOT_AUTHORIZED, {
 						theme: 'colored',
 					});
 				}
-				if (error.response.status === 403) {
+				if (error.status === 403) {
 					toast.warn(LIMIT_EXCEEDED, {
 						theme: 'colored',
 					});
@@ -65,7 +67,7 @@ const UserPage: FC = () => {
 
 	return (
 		<>
-			<button className='goBack' onClick={() => navigate('/')}>
+			<button className='goBack' onClick={() => navigate('/GitHubAPIProject')}>
 				&#8678; {GO_BACK}
 			</button>
 			{error && <p className='error'>{ERROR_MESSAGE}</p>}
